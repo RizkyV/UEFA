@@ -1,5 +1,5 @@
 function getLeagues() {
-    fetcher('leagues?type=league&season=2023', (result) => {
+    fetcher('fixtures?league=2&season=2021', (result) => {
         var div = document.getElementById('placeholder');
         result.response.forEach(league => {
             var p = document.createElement('p');
@@ -65,7 +65,7 @@ function readLocal() {
                     countryRankings.sort((a, b) => {
                         return parseInt(b.ranking) - parseInt(a.ranking);
                     });
-                    
+
                     var table = document.getElementById('countryranking');
                     countryRankings.forEach((country) => {
                         var tr = document.createElement('tr');
@@ -93,8 +93,56 @@ readLocal();
 /**
  * TO DO:
  * 
- * upload countries to github, and read it in readlocal
- * make a ranking table
- * finish country coefficients
  * figure out a way of calculating coefficient?
+ * Go through every fixture in 3 leagues for last 5 seasons
+ * Calculate bonuses?
+ */
+
+/**
+ * LEAGUE IDS
+ * CHAMPIONS LEAGUE - 2
+ * EUROPA LEAGUE - 3
+ * CONFERENCE LEAGUE - 848
+ * 
+ */
+
+
+/**
+ * COEFFICIENT POINTS
+ * QUALIFYING MATCHES (ONLY FOR COUNTRY):
+ * WIN - 1 PTS
+ * DRAW - 0.5 PTS
+ * 
+ * GROUP STAGE ONWARDS:
+ * WIN - 2 PTS
+ * DRAW - 1 PTS
+ * 
+ * KNOCKOUT ROUND PLAY-OFFS AFTER EL AND ECL GS AND BEFORE R16 DO NOT COUNT FOR CLUB
+ * 
+ * BONUS:
+ * REACHING QF (BUT NOT ECL), SF, F - 1 PTS
+ * QUALIFY CL - 4 PTS
+ * QUALIFY CL R16 - 5 PTS
+ * QUALIFY EL R16 - 1 PTS
+ * WIN EL GROUP - 4 PTS
+ * RUNNER UP EL GROUP - 2 PTS
+ * WIN ECL GROUP - 2 PTS
+ * RUNNER UP ECL GROUP - 1 PTS
+ * 
+ * QUALIFYING POINTS IF ELIMINATED IN ECL QUALIFYING:
+ * ECL-Q1 - 1 PTS
+ * ECL-Q2 - 1.5 PTS
+ * ECL-Q3 - 2 PTS
+ * ECL-Q4 - 2.5 PTS
+ * 
+ * MINIMUM PTS FOR GROUP STAGES (IF CLUB SCORES LOWER THAN THIS, THEY GET ATLEAST THIS MUCH - IT IS NOT ADDED)
+ * ECL - 2.5 PTS
+ * EL - 3 PTS
+ * 
+ * 
+ * COUNTRY COEFFICIENT = country pts/number of clubs rounded down to 3 digits
+ * COUNTRY RANKING = sum of coefficients over last 5 years
+ * 
+ * CLUB RANKING = total points or (country rank / 5 rounded down to 3 digits), whichever is highest, 
+ * 
  */
