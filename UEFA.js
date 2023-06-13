@@ -7,7 +7,7 @@ function getLeagues() {
             div.appendChild(p);
         });
         var a = document.getElementById('download');
-        var file = new Blob([JSON.stringify(result.response)], {type: 'json'});
+        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
         a.href = URL.createObjectURL(file);
     });
 }
@@ -16,7 +16,7 @@ function getCountries() {
     fetcher('countries', (result) => {
         countries = result.response;
         var a = document.getElementById('download');
-        var file = new Blob([JSON.stringify(result.response)], {type: 'json'});
+        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
         a.href = URL.createObjectURL(file);
     });
 }
@@ -48,37 +48,39 @@ function readLocal() {
             var result = JSON.parse(result);
             countries = result;
             console.log(countries);
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/countrycoefficients.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    console.log(result);
+                    result.response.forEach(entry => {
+                        var currentCountry = countries.find(element => element.name === entry.entry.country_name);
+                        currentCountry.ranking = entry.entry.ranking;
+                        countryRankings.push(currentCountry)
+                    });
+
+                    countryRankings.sort((a, b) => {
+                        return parseInt(b.ranking) - parseInt(a.ranking);
+                    });
+                    var table = document.getElementById('countryranking');
+                    countryRankings.forEach((country) => {
+                        var tr = document.createElement('tr');
+                        var tdName = document.createElement('td');
+                        var tdRanking = document.createElement('td');
+                        tdName.innerHTML = country.name;
+                        tdRanking.innerHTML = country.ranking;
+                        tr.appendChild(tdName);
+                        tr.appendChild(tdRanking);
+                        table.appendChild(tr);
+
+                    });
+                })
+                .catch((e) => console.error(e));
         })
         .catch((e) => console.error(e));
 
-    fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/countrycoefficients.json")
-        .then((res) => res.text())
-        .then((result) => {
-            var result = JSON.parse(result);
-            console.log(result);
-            result.response.forEach(entry => {
-                var currentCountry = countries.find(element => element.code === entry.entry.country_code);
-                currentCountry.ranking = entry.entry.ranking;
-                countryRankings.push(currentCountry)
-            });
 
-            countryRankings.sort((a, b) => {
-                return parseInt(b.ranking) - parseInt(a.ranking);
-            });
-            var table = document.getElementById('countryranking');
-            countryRankings.forEach((country) => {
-                var tr = document.createElement('tr');
-                var tdName = document.createElement('td');
-                var tdRanking = document.createElement('td');
-                tdName.innerHTML = country.name;
-                tdRanking.innerHTML = country.ranking;
-                tr.appendChild(tdName);
-                tr.appendChild(tdRanking);
-                table.appendChild(tr);
-
-            });
-        })
-        .catch((e) => console.error(e));
 }
 
 var countries = [];
