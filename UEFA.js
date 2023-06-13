@@ -1,5 +1,5 @@
 function getLeagues() {
-    fetcher('fixtures?league=2&season=2021', (result) => {
+    fetcher('fixtures?season=2022&team=327&league=848', (result) => {
         var div = document.getElementById('placeholder');
         result.response.forEach(league => {
             var p = document.createElement('p');
@@ -93,8 +93,11 @@ readLocal();
 /**
  * TO DO:
  * 
- * figure out a way of calculating coefficient?
- * Go through every fixture in 3 leagues for last 5 seasons
+ * foreach team
+ * foreach season
+ * foreach league
+ * call fixtures/season/team/league
+ * need to also calculate for countries at same time
  * Calculate bonuses?
  */
 
