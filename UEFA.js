@@ -56,13 +56,16 @@ function readLocal() {
                     console.log(result);
                     result.response.forEach(entry => {
                         var currentCountry = countries.find(element => element.name === entry.entry.country_name);
-                        currentCountry.ranking = entry.entry.ranking;
-                        countryRankings.push(currentCountry)
+                        if(currentCountry) {
+                            currentCountry.ranking = entry.entry.ranking;
+                            countryRankings.push(currentCountry)
+                        }
                     });
 
                     countryRankings.sort((a, b) => {
                         return parseInt(b.ranking) - parseInt(a.ranking);
                     });
+                    
                     var table = document.getElementById('countryranking');
                     countryRankings.forEach((country) => {
                         var tr = document.createElement('tr');
