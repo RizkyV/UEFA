@@ -63,6 +63,9 @@ function readLocal() {
             });
 
             result.response.sort((a, b) => {
+                console.log(a);
+                console.log(b);
+                console.log(parseInt(a.ranking) - parseInt(b.ranking));
                 return parseInt(a.ranking) - parseInt(b.ranking);
             });
             var table = document.getElementById('countryranking');

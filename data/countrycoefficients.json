@@ -1,6 +1,6 @@
 {"response": [
-    {"entry":{"country_code": "AL", "ranking": "6.250"}}, 
-    {"entry":{"country_code": "AD", "ranking": "5.500"}},
-    {"entry":{"country_code": "GB", "ranking": "109.570"}}
+    {"entry":{"country_code": "AL", "ranking": "6,250"}}, 
+    {"entry":{"country_code": "AD", "ranking": "5,500"}},
+    {"entry":{"country_code": "GB", "ranking": "109,570"}}
     
     ]}
