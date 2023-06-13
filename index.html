@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"> 
+        <head>   
+            <meta charset="UTF-8">  
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <script src="UEFA.js"></script>
+            <link rel="stylesheet" href="UEFA.css">
+            <title>Document</title>  
+        </head>
+        <body>  
+            <h1>UEFA kvalifikation</h1>
+            
+            <button id="leagues" onclick="getLeagues()">Hent ligaer</button>
+            <button id="countries" onclick="getCountries()">Hent lande</button>
+            <button id="local" onclick="readLocal()">Hent lokal</button>
+
+            <br>
+            <a href="" id="download" download="test.json">Download</a>
+            
+            <br>
+
+            <table id="countryranking">
+                 <thead>
+                     <tr>
+                        <th>Land</th>
+                        <th>Point</th>
+                    </tr>
+                </thead>
+            </table>
+
+            <div id="placeholder"></div>
+        </body>
+</html>
