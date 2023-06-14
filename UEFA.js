@@ -1,6 +1,6 @@
 function getLeagues() {
     var text = '';
-    fetcher('teams?season=2022&league=848', (result) => {
+    fetcher('fixtures?season=2022&league=848', (result) => {
 
         var a = document.getElementById('download');
         var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
@@ -76,15 +76,43 @@ function readLocal() {
                 .then((res) => res.text())
                 .then((result) => {
                     var result = JSON.parse(result);
-                    teams = result;
+                    result.forEach((team) => {
+                        teams.push(team);
+                    })
                     console.log(result);
 
+                })
+                .catch((e) => console.error(e));
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=3.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    result.forEach((team) => {
+                        teams.push(team);
+                    })
+                    console.log(result);
+
+                })
+                .catch((e) => console.error(e));
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=848.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    result.forEach((team) => {
+                        teams.push(team);
+                    })
                 })
                 .catch((e) => console.error(e));
         })
         .catch((e) => console.error(e));
 
 
+}
+
+function calculateCoefficient() {
+    console.log('calculating');
 }
 
 var countries = [];
