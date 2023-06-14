@@ -1,30 +1,10 @@
 function getLeagues() {
     var text = '';
-    fetcher('teams?season=2022&league=2', (result) => {
+    fetcher('teams?season=2022&league=848', (result) => {
 
-        text += JSON.stringify(result.response);
-        text += ',';
-
-
-        fetcher('teams?season=2022&league=3', (result) => {
-            text += JSON.stringify(result.response);
-            text += ',';
-
-
-            fetcher('teams?season=2022&league=848', (result) => {
-                text += JSON.stringify(result.response);
-                text += ',';
-
-                text += ''
-
-                console.log(text);
-
-                var a = document.getElementById('download');
-                var file = new Blob([JSON.stringify(text)], { type: 'json' });
-                a.href = URL.createObjectURL(file);
-
-            });
-        });
+        var a = document.getElementById('download');
+        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
+        a.href = URL.createObjectURL(file);
     });
 
 }
@@ -92,20 +72,12 @@ function readLocal() {
             countries = result;
             console.log(countries);
 
-            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/countrycoefficients.json")
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=2.json")
                 .then((res) => res.text())
                 .then((result) => {
                     var result = JSON.parse(result);
+                    teams = result;
                     console.log(result);
-
-                    fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams.json")
-                        .then((res) => res.text())
-                        .then((result) => {
-                            var result = JSON.parse(result);
-                            console.log(result);
-
-                        })
-                        .catch((e) => console.error(e));
 
                 })
                 .catch((e) => console.error(e));
