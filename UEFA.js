@@ -1,182 +1,33 @@
-function getLeagues() {
-    var text = '';
-    fetcher('fixtures?season=2022&league=3', (result) => {
-
-        var a = document.getElementById('download');
-        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
-        a.href = URL.createObjectURL(file);
-    });
-
-}
-
-function getCountries() {
-    fetcher('countries', (result) => {
-        countries = result.response;
-        var a = document.getElementById('download');
-        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
-        a.href = URL.createObjectURL(file);
-    });
-}
-
-function fetcher(endpoint, test) {
-    var myHeaders = new Headers();
-    myHeaders.append("x-apisports-key", "1c7ba15bfac7680dd1bbca1051ddf930");
-
-    var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-    };
-
-    fetch('https://v3.football.api-sports.io/' + endpoint, requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            var result = JSON.parse(result);
-            console.log(result);
-            test(result);
-        })
-        .catch(error => console.log('error', error));
-}
-
-function fillFrontend() {
-    var div = document.getElementById('placeholder');
-    result.response.forEach(league => {
-        var p = document.createElement('p');
-        p.innerHTML = league.country.name + ' - ' + league.league.name;
-        div.appendChild(p);
-    });
-
-    countryRankings.sort((a, b) => {
-        return parseInt(b.ranking) - parseInt(a.ranking);
-    });
-
-    var table = document.getElementById('countryranking');
-    countryRankings.forEach((country) => {
-        var tr = document.createElement('tr');
-        var tdName = document.createElement('td');
-        var tdRanking = document.createElement('td');
-        tdName.innerHTML = country.name;
-        tdRanking.innerHTML = country.ranking;
-        tr.appendChild(tdName);
-        tr.appendChild(tdRanking);
-        table.appendChild(tr);
-
-    });
-}
-
-function readLocal() {
-    fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/countries.json")
-        .then((res) => res.text())
-        .then((result) => {
-            var result = JSON.parse(result);
-            countries = result;
-            console.log(countries);
-
-            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=2.json")
-                .then((res) => res.text())
-                .then((result) => {
-                    var result = JSON.parse(result);
-                    result.forEach((team) => {
-                        teams.push(team);
-                    })
-                    console.log(result);
-
-                })
-                .catch((e) => console.error(e));
-
-            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=3.json")
-                .then((res) => res.text())
-                .then((result) => {
-                    var result = JSON.parse(result);
-                    result.forEach((team) => {
-                        teams.push(team);
-                    })
-                    console.log(result);
-
-                })
-                .catch((e) => console.error(e));
-
-            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams-season=2022-league=848.json")
-                .then((res) => res.text())
-                .then((result) => {
-                    var result = JSON.parse(result);
-                    result.forEach((team) => {
-                        teams.push(team);
-                    })
-                    console.log(result);
-                })
-                .catch((e) => console.error(e));
-
-
-            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=2.json")
-                .then((res) => res.text())
-                .then((result) => {
-                    var result = JSON.parse(result);
-                    result.forEach((fixture) => {
-                        fixtures.push(fixture);
-                    })
-                    console.log(result);
-
-                    fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=3.json")
-                        .then((res) => res.text())
-                        .then((result) => {
-                            var result = JSON.parse(result);
-                            result.forEach((fixture) => {
-                                fixtures.push(fixture);
-                            })
-                            console.log(result);
-
-                            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=848.json")
-                                .then((res) => res.text())
-                                .then((result) => {
-                                    var result = JSON.parse(result);
-                                    result.forEach((fixture) => {
-                                        fixtures.push(fixture);
-                                    })
-                                    console.log(result);
-
-                                    seasons.find(element => element.season = '2022').fixtures = fixtures;
-                                    calculateCoefficients();
-                                })
-                                .catch((e) => console.error(e));
-
-                        })
-                        .catch((e) => console.error(e));
-
-                })
-                .catch((e) => console.error(e));
-
-
-
-
-        })
-        .catch((e) => console.error(e));
-
-
-}
-
 function calculateCoefficients() {
+    //@TODO IT RUNS 3 TIMES
     //@todo instead of one long fixture array, separate into 3 by league
     console.log('calculating');
     console.log(teams);
+    console.log(countries);
     teams.forEach((team) => {
-        if (team.team.id !== 40) {
+        var currentCountry = countries.find(element => element.name === team.team.country);
+        if (team.team.id !== 327) {
             return;
         }
         var clubPoints = 0;
+        var countryPoints = 0;
+        console.log('team');
         console.log(team);
 
         seasons.forEach((season) => {
+            console.log('season');
             console.log(season);
             var clubPointsSeason = 0;
             var countryPointsSeason = 0;
-            var bonuses = [{ 'CLGS': false }, { 'ELGS': false }];
+            //@todo find bonuses
+            var bonuses = [
+                { 'CLGS': false },
+                { 'ELGS': false }
+            ];
             season.fixtures.forEach((fixture) => {
-                console.log(fixture.league.name);
-                console.log(fixture.league.round);
-                console.log(fixture);
-                clubPointsSeason += ptsForFixture(team.team, fixture, bonuses);
-                console.log(clubPointsSeason);
+                var points = ptsForFixture(team.team, fixture, bonuses);
+                clubPointsSeason += points.clubPts;
+                countryPointsSeason += points.countryPts;
             });
 
 
@@ -187,42 +38,94 @@ function calculateCoefficients() {
             console.log('clubPointsSeason');
             console.log(clubPointsSeason);
             clubPoints += clubPointsSeason;
+            countryPoints += countryPointsSeason;
         });
+
         console.log('clubPoints');
         console.log(clubPoints);
+        console.log('countryPoints');
+        console.log(countryPoints);
+
+        //@todo add entry into array with team, club points, season
+        var teamIndex = teamsRanking.findIndex(element => element.team.team.id === team.team.id);
+        if(teamsRanking[teamIndex]) {
+            countriesRanking[teamIndex].points += clubPoints;
+        } else {
+            teamsRanking.push({'team': team, 'points': clubPoints});
+        }
+
+        //@todo add entry into array with country, country points, season
+        var countryIndex = countriesRanking.findIndex(element => element.country.name === currentCountry.name);
+        if(countriesRanking[countryIndex]) {
+            countriesRanking[countryIndex].points += countryPoints;
+        } else {
+            countriesRanking.push({'country': currentCountry, 'points': countryPoints});
+        }
+
+        console.log(teamsRanking);
+        console.log(countriesRanking);
     })
 }
 
 function ptsForFixture(team, fixture, bonuses) {
-    var CL = 'UEFA Champions League';
-    var ECL = 'UEFA Europa Conference League';
-
-    var pts = 0;
+    var clubPts = 0;
+    var countryPts = 0;
     if (isParticipant(team, fixture)) {
+        console.log(fixture.league.name);
+        console.log(fixture.league.round);
+        console.log(fixture);
         console.log('participated');
-        if (fixture.league.name === CL) {
-            if (isHome(team, fixture)) {
-                if (fixture.teams.home.winner) {
-                    console.log('won');
-                    pts += 2;
-                } else if (fixture.teams.home.winner === null) {
-                    console.log('drew');
-                    pts += 1;
-                }
-            } else {
-                if (fixture.teams.away.winner) {
-                    console.log('won');
-                    pts += 2;
-                } else if (fixture.teams.away.winner === null) {
-                    console.log('drew');
-                    pts += 1;
-                }
+        var clubPtsWin = 2;
+        var clubPtsDraw = 1;
+        var countryPtsWin = 2;
+        var countryPtsDraw = 1;
+
+        /*if(isFullPts(fixture)) {
+            clubPtsWin = 2;
+            clubPtsDraw = 1;
+
+            countryPtsWin = 2;
+            countryPtsDraw = 1;
+        } else if(isHalfPts(fixture)) {
+            ptsWin = 1;
+            ptsDraw = 0.5;
+
+            countryPtsWin = 1;
+            countryPtsDraw = 0.5;
+        } else if(isOnlyCountryPts(fixture)) {
+            ptsWin = 0;
+            ptsDraw = 0;
+
+            countryPtsWin = 2;
+            countryPtsDraw = 1;
+        }*/
+
+        if (isHome(team, fixture)) {
+            if (fixture.teams.home.winner) {
+                console.log('won');
+                clubPts += clubPtsWin;
+                countryPts += countryPtsWin;
+            } else if (fixture.teams.home.winner === null) {
+                console.log('drew');
+                clubPts += clubPtsDraw;
+                countryPts += countryPtsDraw;
+            }
+        } else {
+            if (fixture.teams.away.winner) {
+                console.log('won');
+                clubPts += clubPtsWin;
+                countryPts += countryPtsWin;
+            } else if (fixture.teams.away.winner === null) {
+                console.log('drew');
+                clubPts += clubPtsDraw;
+                countryPts += countryPtsDraw;
             }
         }
-        console.log(pts);
+        console.log(clubPts);
+        console.log(countryPts);
     }
 
-    return pts;
+    return {'clubPts': clubPts, 'countryPts': countryPts};
 }
 
 
@@ -244,9 +147,38 @@ function isHome(team, fixture) {
     }
 }
 
+function isFullPts(fixture) {
+    //If is group stage onwards
+    return false;
+}
+
+function isHalfPts(fixture) {
+    switch(fixture.league.round) {
+        case 'Preliminary Round':
+        case '1st Qualifying Round':
+            return true;
+    }
+
+    //If is qualifying
+    return false;
+}
+function isOnlyCountryPts(fixture) {
+    if(fixture.league.name === ECL || fixture.league.name === EL) {
+        if(fixture.league.round === 'Knockout Round Playoffs') {
+            return true;
+        }
+    }
+    //If is knockout playoff round in el and ecl
+    return false;
+}
+
+var CL = 'UEFA Champions League';
+var EL = 'UEFA Europa League';
+var ECL = 'UEFA Europa Conference League';
 var countries = [];
-var countryRankings = [];
+var countriesRanking = [];
 var teams = [];
+var teamsRanking = []
 var fixtures = [];
 readLocal();
 var seasons = [{ 'season': '2022', 'fixtures': [] }, { 'season': '2021', 'fixtures': [] }, { 'season': '2020', 'fixtures': [] }, { 'season': '2019', 'fixtures': [] }, { 'season': '2018', 'fixtures': [] }]
