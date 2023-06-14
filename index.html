@@ -11,12 +11,20 @@
         <body>  
             <h1>UEFA kvalifikation</h1>
             
+            <select style="float: right" id="season">
+                <option default>2023</option>
+                <option default>2022</option>
+            </select>
+            <input type="text" id="wildtext">
+            <button id="leagues" onclick="getWildcard()">Hent wildcard</button>
+    
+            <button id="fixtures" onclick="getFixtures()">Hent fixtures</button>
             <button id="leagues" onclick="getLeagues()">Hent ligaer</button>
             <button id="countries" onclick="getCountries()">Hent lande</button>
-            <button id="local" onclick="getRounds()">Hent runder</button>
+            <button id="rounds" onclick="getRounds()">Hent runder</button>
 
             <br>
-            <a href="" id="download" download="test.json">Download</a>
+            <a href="" id="download">Download</a>
             
             <br>
 

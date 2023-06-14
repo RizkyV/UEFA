@@ -88,6 +88,39 @@ function readLocal() {
         .catch((e) => console.error(e));
 }
 
+function getWildcard() {
+    var text = document.getElementById('wildtext').value;
+    fetcher(text, (result) => {
+        console.log(result.response);
+    });
+}
+
+function getFixtures() {
+    var leagues = ['2', '3', '848'];
+    var season = document.getElementById('season').value;
+    var seasons = [];
+    for (let i = 1; i < 6; i++) {
+        seasons.push(season - i);
+    }
+    var fixtures = [];
+    
+    seasons.forEach((season) => {
+        var tempFixtures = [];
+        leagues.forEach((league) => {
+            fetcher('fixtures?league=' + league + '&season=' + season, (result) => {
+                tempFixtures += result.response;
+                console.log(result.response);
+            });
+        });
+        //@todo timing
+        fixtures.push({'season': season,'fixtures': tempFixtures});
+    });
+
+    console.log(fixtures);
+    
+    
+}
+
 function getLeagues() {
     var text = '';
     fetcher('fixtures/rounds?league=2&season=2022', (result) => {
