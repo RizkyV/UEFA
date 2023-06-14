@@ -103,6 +103,43 @@ function readLocal() {
                     result.forEach((team) => {
                         teams.push(team);
                     })
+                    console.log(result);
+                })
+                .catch((e) => console.error(e));
+
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=2.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    result.forEach((fixture) => {
+                        fixtures.push(fixture);
+                    })
+                    console.log(result);
+
+                })
+                .catch((e) => console.error(e));
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=3.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    result.forEach((fixture) => {
+                        fixtures.push(fixture);
+                    })
+                    console.log(result);
+
+                })
+                .catch((e) => console.error(e));
+
+            fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/fixtures-season=2022-league=848.json")
+                .then((res) => res.text())
+                .then((result) => {
+                    var result = JSON.parse(result);
+                    result.forEach((fixture) => {
+                        fixtures.push(fixture);
+                    })
+                    console.log(result);
                 })
                 .catch((e) => console.error(e));
         })
@@ -112,12 +149,24 @@ function readLocal() {
 }
 
 function calculateCoefficient() {
+    //@todo instead of one long fixture array, separate into 3 by league
     console.log('calculating');
+
+    teams.forEach((team) => {
+        console.log(team);
+
+        fixtures.forEach(() => {
+
+
+
+        })
+    })
 }
 
 var countries = [];
 var countryRankings = [];
 var teams = [];
+var fixtures = [];
 readLocal();
 
 /**
