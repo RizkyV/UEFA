@@ -1,15 +1,32 @@
 function getLeagues() {
-    fetcher('fixtures?season=2022&team=327&league=848', (result) => {
-        var div = document.getElementById('placeholder');
-        result.response.forEach(league => {
-            var p = document.createElement('p');
-            p.innerHTML = league.country.name + ' - ' + league.league.name;
-            div.appendChild(p);
+    var text = '';
+    fetcher('teams?season=2022&league=2', (result) => {
+
+        text += JSON.stringify(result.response);
+        text += ',';
+
+
+        fetcher('teams?season=2022&league=3', (result) => {
+            text += JSON.stringify(result.response);
+            text += ',';
+
+
+            fetcher('teams?season=2022&league=848', (result) => {
+                text += JSON.stringify(result.response);
+                text += ',';
+
+                text += ''
+
+                console.log(text);
+
+                var a = document.getElementById('download');
+                var file = new Blob([JSON.stringify(text)], { type: 'json' });
+                a.href = URL.createObjectURL(file);
+
+            });
         });
-        var a = document.getElementById('download');
-        var file = new Blob([JSON.stringify(result.response)], { type: 'json' });
-        a.href = URL.createObjectURL(file);
     });
+
 }
 
 function getCountries() {
@@ -41,6 +58,32 @@ function fetcher(endpoint, test) {
         .catch(error => console.log('error', error));
 }
 
+function fillFrontend() {
+    var div = document.getElementById('placeholder');
+    result.response.forEach(league => {
+        var p = document.createElement('p');
+        p.innerHTML = league.country.name + ' - ' + league.league.name;
+        div.appendChild(p);
+    });
+
+    countryRankings.sort((a, b) => {
+        return parseInt(b.ranking) - parseInt(a.ranking);
+    });
+
+    var table = document.getElementById('countryranking');
+    countryRankings.forEach((country) => {
+        var tr = document.createElement('tr');
+        var tdName = document.createElement('td');
+        var tdRanking = document.createElement('td');
+        tdName.innerHTML = country.name;
+        tdRanking.innerHTML = country.ranking;
+        tr.appendChild(tdName);
+        tr.appendChild(tdRanking);
+        table.appendChild(tr);
+
+    });
+}
+
 function readLocal() {
     fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/countries.json")
         .then((res) => res.text())
@@ -54,30 +97,16 @@ function readLocal() {
                 .then((result) => {
                     var result = JSON.parse(result);
                     console.log(result);
-                    result.response.forEach(entry => {
-                        var currentCountry = countries.find(element => element.name === entry.entry.country_name);
-                        if(currentCountry) {
-                            currentCountry.ranking = entry.entry.ranking;
-                            countryRankings.push(currentCountry)
-                        }
-                    });
 
-                    countryRankings.sort((a, b) => {
-                        return parseInt(b.ranking) - parseInt(a.ranking);
-                    });
+                    fetch("https://raw.githubusercontent.com/RizkyV/UEFA/main/data/teams.json")
+                        .then((res) => res.text())
+                        .then((result) => {
+                            var result = JSON.parse(result);
+                            console.log(result);
 
-                    var table = document.getElementById('countryranking');
-                    countryRankings.forEach((country) => {
-                        var tr = document.createElement('tr');
-                        var tdName = document.createElement('td');
-                        var tdRanking = document.createElement('td');
-                        tdName.innerHTML = country.name;
-                        tdRanking.innerHTML = country.ranking;
-                        tr.appendChild(tdName);
-                        tr.appendChild(tdRanking);
-                        table.appendChild(tr);
+                        })
+                        .catch((e) => console.error(e));
 
-                    });
                 })
                 .catch((e) => console.error(e));
         })
@@ -88,6 +117,7 @@ function readLocal() {
 
 var countries = [];
 var countryRankings = [];
+var teams = [];
 readLocal();
 
 /**
