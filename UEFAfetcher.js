@@ -103,22 +103,28 @@ function getFixtures() {
         seasons.push(season - i);
     }
     var fixtures = [];
-    
+
     seasons.forEach((season) => {
-        var tempFixtures = [];
         leagues.forEach((league) => {
             fetcher('fixtures?league=' + league + '&season=' + season, (result) => {
-                tempFixtures += result.response;
+                fixtures.push(result.response);
                 console.log(result.response);
             });
         });
-        //@todo timing
-        fixtures.push({'season': season,'fixtures': tempFixtures});
+    });
+
+    seasons.forEach((season) => {
+        var seasonFixtures = fixtures.filter((element) => {
+            console.log(element);
+            return element[0].league.season === season;
+        });
+        console.log(seasonFixtures);
+        fixtures.push({'season': season, 'fixtures': seasonFixtures });
     });
 
     console.log(fixtures);
-    
-    
+
+
 }
 
 function getLeagues() {
@@ -198,7 +204,7 @@ function fillTable(rankings) {
         var tr = document.createElement('tr');
         var tdName = document.createElement('td');
         var tdRanking = document.createElement('td');
-        tdName.innerHTML = team.team.team.name;
+        tdName.innerHTML = team.team.team.name + ' (' + team.team.team.country + ')';
         tdRanking.innerHTML = team.points;
         tr.appendChild(tdName);
         tr.appendChild(tdRanking);

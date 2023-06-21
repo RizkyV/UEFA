@@ -76,23 +76,23 @@ function calculateCoefficients() {
                 clubPointsSeason += 1;
             }
 
-            if(bonuses.ELM) {
+            if(bonuses.ELGSM) {
                 if(clubPointsSeason < 3) {
                     clubPointsSeason = 3;
                 }
-            } else if(bonuses.ECLM) {
+            } else if(bonuses.ECLGSM) {
                 if(clubPointsSeason < 2.5) {
                     clubPointsSeason = 2.5;
                 }
             }
             
-            if(bonuses.ECLQ4ELIM && !bonuses.ELM && !bonuses.ECLM) {
+            if(bonuses.ECLQ4ELIM && !bonuses.ELGSM && !bonuses.ECGSLM) {
                 clubPointsSeason += 2.5;
-            } else if(bonuses.ECLQ3ELIM && !bonuses.ELM && !bonuses.ECLM) {
+            } else if(bonuses.ECLQ3ELIM && !bonuses.ELGSM && !bonuses.ECGSLM) {
                 clubPointsSeason += 2;
-            } else if(bonuses.ECLQ2ELIM && !bonuses.ELM && !bonuses.ECLM) {
+            } else if(bonuses.ECLQ2ELIM && !bonuses.ELGSM && !bonuses.ECGSLM) {
                 clubPointsSeason += 1.5;
-            } else if(bonuses.ECLQ1ELIM && !bonuses.ELM && !bonuses.ECLM) {
+            } else if(bonuses.ECLQ1ELIM && !bonuses.ELGSM && !bonuses.ECGSLM) {
                 clubPointsSeason += 1;
             }
 
@@ -260,16 +260,16 @@ function checkBonuses(fixture, bonuses) {
      * Minimums
      */
     if(fixture.league.name === EL && fixture.league.round.includes('Group')) {
-        bonuses.ELM = true;
+        bonuses.ELGSM = true;
     } else if(fixture.league.name === ECL && fixture.league.round.includes('Group')) {
-        bonuses.ECLM = true;
+        bonuses.ECLGSM = true;
     }
     if(fixture.league.name === ECL && fixture.league.round.includes('Play-offs')) {
         bonuses.ECLQ4ELIM = true;
     } else if(fixture.league.name === ECL && fixture.league.round.includes('3rd Qualifying Round')) {
         bonuses.ECLQ3ELIM = true;
     } else if(fixture.league.name === ECL && fixture.league.round.includes('2nd Qualifying Round')) {
-        bonuses.ECLQ23ELIM = true;
+        bonuses.ECLQ2ELIM = true;
     } else if(fixture.league.name === ECL && fixture.league.round.includes('1st Qualifying Round')) {
         bonuses.ECLQ1ELIM = true;
     }
@@ -354,4 +354,6 @@ calculateCoefficients();
  * 
  * CLUB RANKING = total points or (country rank / 5 rounded down to 3 digits), whichever is highest, 
  * 
+ * 
+ * Show Club and coefficient (last season coefficient)
  */
